@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+	
+	<title>Página del tiempo</title>
+
+
+	<script>
+		$(document).ready(function() {
+			$('form').submit(function() {
+				// your code here (build up your url)
+				let url='http://api.openweathermap.org/data/2.5/weather?q=';
+				let api='&units=metric&lang=es&appid=3fe82558f825e482ad0ebdfbda2498b1'
+				url+=$('#city').val()+api;
+				$.get(url, function(res) {
+					// your code here
+					$('#city_h2').text(res.name);
+					$('#weather').html('<b>Clima</b>: '+res.weather[0].main+' ('+res.weather[0].description+')');
+					$('#temp').html('<b>Temperatura:</b> '+res.main.temp+'°C');
+					$('#cord_city').html('<b>Coordenadas:</b> '+res.coord.lon+' lon '+res.coord.lat+' lat');
+					
+					if ("geolocation" in navigator){
+						navigator.geolocation.getCurrentPosition(function (position) {
+							$('#result').html('<b>Coordenadas del usuario</b>: '+position.coords.longitude+' lon : '+ position.coords.latitude+' lat');
+						});
+					} else {
+						$('#result').html('<b>Coordenadas del usuario</b>: No disponibles');
+					}
+				}, 'json');
+				// don't forget to return false so the page doesn't refresh
+				return false;
+			});
+		});
+	</script>
+
+</head>
+<body>
+	<form method="GET">
+		<label>Ciudad: </label><input type="text" id="city"><input type="submit" value="Consultar">
+	</form>
+	<br><br>
+	<h2 id="city_h2"></h2>
+	<p id="weather"><p>
+	<p id="temp"><p>
+	<p id="cord_city"><p>
+	<p id="cord_user"><p>
+	<p id="result"></p>
+	</body>
+</html>
